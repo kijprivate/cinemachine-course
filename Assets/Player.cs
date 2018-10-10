@@ -37,7 +37,6 @@ public class Player : MonoBehaviour
         }
 
 	    float distance = Vector3.Distance(transform.position,_target);
-        print(distance);
 
 	    if (distance < 3f)
 	    {
