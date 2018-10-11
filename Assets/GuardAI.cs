@@ -9,6 +9,8 @@ public class GuardAI : MonoBehaviour
 {
 
     public List<Transform> WayPoints;
+    public Vector3 coinPos;
+    public bool coinExist = false;
 
     private Transform _currentTarget;
     private NavMeshAgent _agent;
@@ -22,13 +24,14 @@ public class GuardAI : MonoBehaviour
 
 	    _agent = GetComponent<NavMeshAgent>();
 	    _animator = GetComponent<Animator>();
+	    coinExist = false;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
 
-        if ( WayPoints[_index]!=null && WayPoints.Count>0)
+        if ( WayPoints[_index]!=null && WayPoints.Count>0 && !coinExist)
 	    {
 	        _currentTarget = WayPoints[_index];
 	        _agent.destination = _currentTarget.position;
@@ -37,11 +40,19 @@ public class GuardAI : MonoBehaviour
             {
                 _targetReached = true;
 
-                StartCoroutine(WaitBeforeMovingRoutine());
-
-                
+                StartCoroutine(WaitBeforeMovingRoutine()); 
             }
            // print(_currentTarget);
+        }
+
+	    if (coinExist)
+	    {
+	        float distance = Vector3.Distance(transform.position, coinPos);
+	        if (distance < 2.5f)
+	        {
+	            _animator.SetBool("Walk", false);
+	            StartCoroutine(WaitNearCoinRoutine());
+	        }
         }
 	    
 	}
@@ -86,5 +97,14 @@ public class GuardAI : MonoBehaviour
         }
 
         _targetReached = false;
+    }
+
+    private IEnumerator WaitNearCoinRoutine()
+    {
+        yield return new WaitForSeconds(3f);
+
+        _animator.SetBool("Walk", true);
+        _agent.SetDestination(WayPoints[_index].position);
+        coinExist = false;
     }
 }
