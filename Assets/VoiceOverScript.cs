@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class VoiceOverScript : MonoBehaviour
 {
 
-    public AudioClip audioClip;
+    //public AudioClip audioClip;
+    private AudioSource audioSource;
+    private bool wasPlayed = false;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player"&& !wasPlayed)
         {
-            AudioSource.PlayClipAtPoint(audioClip,Camera.main.transform.position);
+            audioSource.Play();
+            wasPlayed = true;
         }
     }
 }

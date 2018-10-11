@@ -48,7 +48,7 @@ public class GuardAI : MonoBehaviour
 	    if (coinExist)
 	    {
 	        float distance = Vector3.Distance(transform.position, coinPos);
-	        if (distance < 2.5f)
+	        if (distance < 1.5f)
 	        {
 	            _animator.SetBool("Walk", false);
 	            StartCoroutine(WaitNearCoinRoutine());
